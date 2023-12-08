@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nations.WorkFlow.Repositories", "NationsWorkFlows\Nations.WorkFlow.Repositories.csproj", "{4C59CA6A-1003-44FA-ACAF-090B3EEC547E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nations.WorkFlow.Abstractions", "Nations.WorkFlow.Abstractions\Nations.WorkFlow.Abstractions.csproj", "{011C027F-6B6A-4ABD-8C5D-4409047F64D3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4C59CA6A-1003-44FA-ACAF-090B3EEC547E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C59CA6A-1003-44FA-ACAF-090B3EEC547E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C59CA6A-1003-44FA-ACAF-090B3EEC547E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C59CA6A-1003-44FA-ACAF-090B3EEC547E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{011C027F-6B6A-4ABD-8C5D-4409047F64D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{011C027F-6B6A-4ABD-8C5D-4409047F64D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{011C027F-6B6A-4ABD-8C5D-4409047F64D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{011C027F-6B6A-4ABD-8C5D-4409047F64D3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0F4B16D7-46F5-4EE2-9A97-223386AEA401}
+	EndGlobalSection
+EndGlobal

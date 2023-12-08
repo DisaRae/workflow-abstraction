@@ -1,0 +1,9 @@
+trigger:
+- develop
+
+jobs:
+- template: template--core-nuget-package.yml
+  parameters:
+    name: 'WorkFlowAbstractions'
+    project: 'WorkFlow.Abstractions/WorkFlow.Abstractions.csproj'
+    packageVersionNumberSuffix: ''

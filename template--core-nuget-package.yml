@@ -1,0 +1,79 @@
+######################
+## Builds a .NET Core NuGet Package
+##
+## v1 - Initial version
+## v2 - Replaced global variable references to $(buildConfiguration) with ${{ parameter. }} references
+## v3 - Added support for Nations NuGet packages through nuget.config
+## v4 - Configured NuGet tooling to self-update as part of each build
+## v5 (Current) - Added version information at the top of the file
+#######################
+
+parameters:
+  name: 'nuget'
+  project: ''
+  packageVersionNumberSuffix: '-develop'
+  buildConfiguration: 'Release'
+
+jobs:
+- job: '${{ parameters.name }}'
+  pool: 'default'
+  steps:
+  - task: PowerShell@2
+    displayName: Limit packageVersionNumberSuffix to 20 characters
+    inputs:
+      targetType: 'inline'
+      script: 'Set-Variable lengthSafeVersionSuffix "${{ parameters.packageVersionNumberSuffix }}"
+
+      Set-Variable lengthSafeVersionSuffix $lengthSafeVersionSuffix.Substring(0, [System.Math]::Min($lengthSafeVersionSuffix.Length, 21))
+
+      Set-Variable lengthSafeVersionSuffix $lengthSafeVersionSuffix.Replace("_", "-").Replace(".", "-")
+
+      Write-Output "##vso[task.setvariable variable=LengthSafeVersionSuffix] $lengthSafeVersionSuffix"'
+
+  - task: projectversionasvariable@1
+    displayName: Read the version number of the project into variables for the pipeline
+    inputs:
+      path: ${{ parameters.project }}
+
+  - task: CmdLine@2
+    displayName: Calculate version number for this release
+    inputs:
+      # $(Version.MajorMinor) is provided by the plugin Project Version As Build Variable
+      # https://devops.nationsts.com/_gallery/items/?itemName=tmarkovski.projectversionasvariable
+      script: 'echo "##vso[task.setvariable variable=CalculatedBuildNumber]$(Version.MajorMinorPatch).$(Build.BuildId)$(LengthSafeVersionSuffix)"'
+
+  - task: NuGetToolInstaller@1
+    inputs:
+      versionSpec:
+      checkLatest: true
+
+  - task: DotNetCoreCLI@2
+    displayName: Restore NuGet packages
+    inputs:
+      command: 'restore'
+      projects: ${{ parameters.project }}
+      feedsToUse: 'config'
+      nugetConfigPath: 'nuget.config'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build the application - ${{ parameters.buildConfiguration }}'
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.project }}
+      arguments: '--configuration ${{ parameters.buildConfiguration }}'
+
+  - task: DotNetCoreCLI@2
+    displayName: Build the output NuGet package
+    inputs:
+      command: 'pack'
+      packagesToPack: ${{ parameters.project }}
+      versioningScheme: 'byEnvVar'
+      versionEnvVar: 'CalculatedBuildNumber'
+
+  - task: DotNetCoreCLI@2
+    displayName: Push the output NuGet package to nuget.nationsts.com
+    inputs:
+      command: 'push'
+      packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+      nuGetFeedType: 'external'
+      publishFeedCredentials: 'nuget.nationsts.com'

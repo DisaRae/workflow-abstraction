@@ -1,0 +1,40 @@
+######################
+## Tries to compile all the solutions in a repository to
+## verify that they can build on the server.
+##
+## v1 - Initial version
+## v2 (Current) - Added NuGetToolInstaller@1 command to use the most up-to-date NuGet.exe tool on each run
+#######################
+
+pool: 'Default'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .NET 6.0 SDK'
+  inputs:
+    packageType: sdk
+    version: '6.0.x'
+    includePreviewVersions: true
+
+- task: NuGetToolInstaller@1
+  inputs:
+    checkLatest: true
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+    feedsToUse: 'config'
+    nugetConfigPath: 'nuget.config'
+
+- task: VSBuild@1
+  inputs:
+    vsVersion: latest
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
